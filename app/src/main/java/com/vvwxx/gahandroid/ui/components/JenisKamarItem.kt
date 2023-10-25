@@ -43,7 +43,7 @@ fun JenisKamarItem(
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(150.dp)
                     .clip(RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp)),
                 contentScale = ContentScale.Crop
             )
@@ -103,14 +103,12 @@ fun JenisKamarItem(
                             fontWeight = FontWeight.Normal
                         ),
                         modifier = Modifier
-                            .padding(top = 18.dp, bottom = 8.dp)
+                            .padding(top = 18.dp, bottom = 4.dp)
                             .align(Alignment.BottomEnd)
                     )
                 }
-
             }
         }
-
     }
 }
 
