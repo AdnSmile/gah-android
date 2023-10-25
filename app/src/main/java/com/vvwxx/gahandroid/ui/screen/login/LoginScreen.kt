@@ -3,10 +3,13 @@ package com.vvwxx.gahandroid.ui.screen.login
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -30,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -43,7 +47,6 @@ import com.vvwxx.gahandroid.ui.theme.GahandroidTheme
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onClick : () -> Unit
 ) {
 
     var username by rememberSaveable {
@@ -128,13 +131,33 @@ fun LoginScreen(
                 )
 
                 FilledTonalButton(
-                    onClick = onClick,
+                    onClick = {},
                     modifier = Modifier
-                        .padding(16.dp)
-                        .padding(bottom = 24.dp)
+                        .padding(12.dp)
                         .fillMaxWidth(0.6f)
                 ) {
                     Text(text = "Masuk")
+                }
+
+                Row(modifier = Modifier.padding(bottom = 24.dp)) {
+
+                    Text(
+                        text = "Tidak punya akun?",
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Normal
+                        )
+                    )
+
+                Spacer(modifier = Modifier.padding(2.dp))
+
+                    ClickableText(
+                        text = AnnotatedString("Registrasi"),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Blue
+                        ),
+                        onClick = {},
+                    )
                 }
             }
         }
@@ -145,6 +168,6 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     GahandroidTheme {
-        LoginScreen{}
+        LoginScreen()
     }
 }
