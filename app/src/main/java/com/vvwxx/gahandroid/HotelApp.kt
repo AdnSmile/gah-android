@@ -1,5 +1,6 @@
 package com.vvwxx.gahandroid
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -18,12 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.vvwxx.gahandroid.ui.navigation.NavigationItem
 import com.vvwxx.gahandroid.ui.navigation.Screen
+import com.vvwxx.gahandroid.ui.screen.detail.DetailJenisScreen
 import com.vvwxx.gahandroid.ui.screen.home.HomeScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +62,8 @@ fun HotelApp(
                 HomeScreen(
                     navigateToDetail = { id ->
                         navController.navigate(Screen.DetailJenisKamar.createRoute(id))
-                    }
+                    },
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
                 )
             }
 
@@ -67,6 +73,17 @@ fun HotelApp(
 
             composable(Screen.Profile.route) {
                 // profile screen
+            }
+
+            composable(
+                route = Screen.DetailJenisKamar.route,
+                arguments = listOf(navArgument("id") { type = NavType.IntType }),
+            ) {
+                val id = it.arguments?.getInt("id") ?: 0
+                DetailJenisScreen(
+                    id = id,
+                    navigateBack = { navController.navigateUp() },
+                )
             }
         }
 
