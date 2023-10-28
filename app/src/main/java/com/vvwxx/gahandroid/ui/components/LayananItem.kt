@@ -48,7 +48,7 @@ fun JenisItem(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(100.dp)
                     .clip(RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp))
             )
 
@@ -76,7 +76,7 @@ fun JenisItem(
                             fontWeight = FontWeight.Normal
                         ),
                         modifier = Modifier
-                            .padding(top = 24.dp, bottom = 4.dp)
+                            .padding(top = 28.dp, bottom = 4.dp)
                             .align(Alignment.BottomStart)
                     )
                 }

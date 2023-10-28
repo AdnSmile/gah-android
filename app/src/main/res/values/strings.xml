@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">gah-android</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_history">History</string>
+    <string name="menu_profile">Profile</string>
 </resources>
