@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,17 +28,20 @@ import com.vvwxx.gahandroid.data.model.Layanan
 import com.vvwxx.gahandroid.ui.theme.GahandroidTheme
 
 @Composable
-fun JenisItem(
+fun LayananItem(
     layanan: Layanan,
     modifier: Modifier = Modifier
 ) {
 
-    Card(
+    ElevatedCard(
         modifier = modifier.width(140.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
-        )
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        ),
     ) {
         
         Column {
@@ -89,7 +92,7 @@ fun JenisItem(
 @Composable
 fun JenisItemPrev() {
     GahandroidTheme {
-        JenisItem(
+        LayananItem(
             Layanan(
                 id = 4,
                 nama = "Meeting room",

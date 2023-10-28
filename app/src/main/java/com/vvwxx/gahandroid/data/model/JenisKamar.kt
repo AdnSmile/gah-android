@@ -11,7 +11,7 @@ data class JenisKamar(
     val rincianKamar: String,
     val tipeBed: String,
     val ukuranKamar: Int,
-    val tarif: Long
+    val tarif: Long,
 )
 
 val dummyJenisKamar = listOf(
@@ -42,7 +42,7 @@ val dummyJenisKamar = listOf(
         kapasitas = 2,
         rincianKamar = "AC, Air minum kemasan gratis, Brankas dalam kamar (ukuran laptop), Fasilitas membuat kopi/teh, Jubah mandi, Layanan kamar (24 jam), Meja tulis, Minibar, Pembersihan kamar harian, Pengering rambut, Peralatan mandi gratis, Sandal, Telepon, Tempat tidur eks",
         tipeBed = "1 king",
-        ukuranKamar = 22,
+        ukuranKamar = 36,
         tarif = 600000
     ),
 
@@ -58,7 +58,7 @@ val dummyJenisKamar = listOf(
         kapasitas = 2,
         rincianKamar = "AC, Air minum kemasan gratis, Brankas dalam kamar (ukuran laptop), Fasilitas membuat kopi/teh, Jubah mandi, Layanan kamar (24 jam), Meja tulis, Minibar, Pembersihan kamar harian, Pengering rambut, Peralatan mandi gratis, Sandal, Telepon, Tempat tidur eks",
         tipeBed = "1 king",
-        ukuranKamar = 22,
+        ukuranKamar = 46,
         tarif = 800000
     ),
 
@@ -74,7 +74,7 @@ val dummyJenisKamar = listOf(
         kapasitas = 2,
         rincianKamar = "AC, Air minum kemasan gratis, Brankas dalam kamar (ukuran laptop), Fasilitas membuat kopi/teh, Jubah mandi, Layanan kamar (24 jam), Meja tulis, Minibar, Pembersihan kamar harian, Pengering rambut, Peralatan mandi gratis, Sandal, Telepon, Tempat tidur eks",
         tipeBed = "1 king atau 2 double bed",
-        ukuranKamar = 22,
+        ukuranKamar = 24,
         tarif = 1500000
     )
 

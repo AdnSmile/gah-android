@@ -1,9 +1,14 @@
 package com.vvwxx.gahandroid.data
 
+import com.vvwxx.gahandroid.data.model.DataUmum
 import com.vvwxx.gahandroid.data.model.JenisKamar
+import com.vvwxx.gahandroid.data.model.Layanan
 import com.vvwxx.gahandroid.data.model.dummyJenisKamar
+import com.vvwxx.gahandroid.data.model.dummyLayanan
 import com.vvwxx.gahandroid.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
 
 class HotelRepository(
@@ -11,6 +16,9 @@ class HotelRepository(
 ) {
 
     private val jenisKamar = mutableListOf<JenisKamar>()
+    private val layanan = mutableListOf<Layanan>()
+
+    private var dataUmum = MutableStateFlow(DataUmum(emptyList(), emptyList()))
 
     init {
         if (jenisKamar.isEmpty()) {
@@ -30,6 +38,33 @@ class HotelRepository(
                 )
             }
         }
+
+        if (layanan.isEmpty()) {
+            dummyLayanan.forEach {
+                layanan.add(
+                    Layanan(
+                        id = it.id,
+                        image = it.image,
+                        nama = it.nama,
+                        satuan = it.satuan,
+                        tarif = it.tarif
+                    )
+                )
+            }
+        }
+
+        dataUmum.value = DataUmum(
+            jenisKamar = jenisKamar,
+            layanan = layanan
+        )
+    }
+
+    fun getAllLayanan(): Flow<List<Layanan>> {
+        return flowOf(layanan)
+    }
+
+    fun getDataUmum(): Flow<DataUmum> {
+        return dataUmum.asStateFlow()
     }
 
     fun getAllJenisKamar(): Flow<List<JenisKamar>> {

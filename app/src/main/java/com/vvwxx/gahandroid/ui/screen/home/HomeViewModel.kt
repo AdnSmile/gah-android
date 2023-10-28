@@ -3,7 +3,7 @@ package com.vvwxx.gahandroid.ui.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vvwxx.gahandroid.data.HotelRepository
-import com.vvwxx.gahandroid.data.model.JenisKamar
+import com.vvwxx.gahandroid.data.model.DataUmum
 import com.vvwxx.gahandroid.ui.common.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,16 +14,16 @@ class HomeViewModel(
     private val repository: HotelRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState<List<JenisKamar>>>
+    private val _uiState: MutableStateFlow<UiState<DataUmum>>
         = MutableStateFlow(UiState.Loading)
 
-    val uiState: StateFlow<UiState<List<JenisKamar>>>
+    val uiState: StateFlow<UiState<DataUmum>>
         get() = _uiState
 
-    fun getAllJenisKamar() {
+    fun getAllDataUmum() {
 
         viewModelScope.launch {
-            repository.getAllJenisKamar()
+            repository.getDataUmum()
                 .catch {
                     _uiState.value = UiState.Error(it.message.toString())
                 }
