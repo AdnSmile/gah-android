@@ -1,5 +1,6 @@
 package com.vvwxx.gahandroid.ui.screen.home
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,9 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vvwxx.gahandroid.data.model.JenisKamar
 import com.vvwxx.gahandroid.data.model.Layanan
@@ -27,12 +32,15 @@ import com.vvwxx.gahandroid.ui.common.UiState
 import com.vvwxx.gahandroid.ui.components.JenisKamarItem
 import com.vvwxx.gahandroid.ui.components.LayananItem
 
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("theDataStore")
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    context: Context = LocalContext.current,
     viewModel: HomeViewModel = viewModel(
-        factory = ViewModelFactory(Injection.provideRepository())
+        factory = ViewModelFactory(Injection.provideRepository(context))
     ),
     navigateToDetail: (Int) -> Unit,
 ) {

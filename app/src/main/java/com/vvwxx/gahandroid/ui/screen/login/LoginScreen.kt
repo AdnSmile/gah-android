@@ -1,5 +1,6 @@
 package com.vvwxx.gahandroid.ui.screen.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
@@ -39,14 +41,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.vvwxx.gahandroid.ui.theme.GahandroidTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    navigateBack: () -> Unit,
 ) {
 
     var username by rememberSaveable {
@@ -60,6 +61,15 @@ fun LoginScreen(
     var passwordHidden by rememberSaveable {
         mutableStateOf(true)
     }
+
+    Icon(
+        imageVector = Icons.Default.ArrowBack,
+        contentDescription = null,
+        modifier = Modifier
+            .clickable { navigateBack() }
+            .padding(18.dp)
+//                        .weight(1f, false)
+    )
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -164,10 +174,10 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    GahandroidTheme {
-        LoginScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginScreenPreview() {
+//    GahandroidTheme {
+//        LoginScreen()
+//    }
+//}

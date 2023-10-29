@@ -76,6 +76,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1") //viewModelScope
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1") //liveData
     implementation ("androidx.room:room-ktx:2.5.1")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0") // data store
 
     // Navigation Component
     implementation ("androidx.navigation:navigation-compose:2.5.3")

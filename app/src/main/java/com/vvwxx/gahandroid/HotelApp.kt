@@ -29,7 +29,9 @@ import androidx.navigation.navArgument
 import com.vvwxx.gahandroid.ui.navigation.NavigationItem
 import com.vvwxx.gahandroid.ui.navigation.Screen
 import com.vvwxx.gahandroid.ui.screen.detail.DetailJenisScreen
+import com.vvwxx.gahandroid.ui.screen.history.HistoryScreen
 import com.vvwxx.gahandroid.ui.screen.home.HomeScreen
+import com.vvwxx.gahandroid.ui.screen.login.LoginScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +45,9 @@ fun HotelApp(
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != Screen.DetailJenisKamar.route){
+            if (currentRoute != Screen.DetailJenisKamar.route
+                && currentRoute != Screen.Login.route
+                && currentRoute != Screen.Register.route){
                 BottomBar(navController)
             }
         },
@@ -69,10 +73,26 @@ fun HotelApp(
 
             composable(Screen.History.route) {
                 // history screen
+
+                HistoryScreen(
+                    navigateToLogin = { navController.navigate(Screen.Login.route) }
+                )
             }
 
             composable(Screen.Profile.route) {
                 // profile screen
+            }
+
+            composable(Screen.Login.route) {
+                // Login screen
+
+                LoginScreen(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+
+            composable(Screen.Register.route) {
+                // Register screen
             }
 
             composable(

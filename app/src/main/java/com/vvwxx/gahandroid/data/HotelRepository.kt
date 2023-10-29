@@ -3,22 +3,42 @@ package com.vvwxx.gahandroid.data
 import com.vvwxx.gahandroid.data.model.DataUmum
 import com.vvwxx.gahandroid.data.model.JenisKamar
 import com.vvwxx.gahandroid.data.model.Layanan
+import com.vvwxx.gahandroid.data.model.Preference
 import com.vvwxx.gahandroid.data.model.dummyJenisKamar
 import com.vvwxx.gahandroid.data.model.dummyLayanan
+import com.vvwxx.gahandroid.data.remote.response.AccountDetailResponse
+import com.vvwxx.gahandroid.data.remote.response.LoginResponse
+import com.vvwxx.gahandroid.data.remote.response.RiwayatReservasiItem
+import com.vvwxx.gahandroid.data.remote.response.WebResponse
 import com.vvwxx.gahandroid.data.remote.retrofit.ApiService
+import com.vvwxx.gahandroid.ui.common.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
 
 class HotelRepository(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val pref: PreferenceRepository
 ) {
 
     private val jenisKamar = mutableListOf<JenisKamar>()
     private val layanan = mutableListOf<Layanan>()
 
     private var dataUmum = MutableStateFlow(DataUmum(emptyList(), emptyList()))
+
+    private val _loginResponse = MutableStateFlow<UiState<WebResponse<LoginResponse>>>(UiState.Loading)
+    val loginResponse: StateFlow<UiState<WebResponse<LoginResponse>>>
+        get() = _loginResponse
+
+    private val _accountDetailResponse = MutableStateFlow<UiState<WebResponse<AccountDetailResponse>>>(UiState.Loading)
+    val accountDetailResponse: StateFlow<UiState<WebResponse<AccountDetailResponse>>>
+        get() = _accountDetailResponse
+
+    private val _listRiwayatReservasi = MutableStateFlow<UiState<List<RiwayatReservasiItem>>>(UiState.Loading)
+    val listRiwayatReservasi: StateFlow<UiState<List<RiwayatReservasiItem>>>
+        get() = _listRiwayatReservasi
 
     init {
         if (jenisKamar.isEmpty()) {
@@ -59,6 +79,51 @@ class HotelRepository(
         )
     }
 
+    suspend fun loginAccount(email: String, password: String) {
+
+        _loginResponse.value = UiState.Loading
+        try {
+            val response = apiService.loginAccount(email, password)
+            _loginResponse.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _loginResponse.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun getAccountDetail(token: String, id: Int) {
+
+        _listRiwayatReservasi.value = UiState.Loading
+        try {
+            val response = apiService.getAccountDetail("Bearer $token", id)
+            _listRiwayatReservasi.value = UiState.Success(response.data.riwayatReservasi)
+        } catch (e: Exception) {
+            _listRiwayatReservasi.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun getRiwayatReservasi(token: String, id: Int) {
+
+        _accountDetailResponse.value = UiState.Loading
+        try {
+            val response = apiService.getAccountDetail("Bearer $token", id)
+            _accountDetailResponse.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _accountDetailResponse.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun saveAccountPref(data: Preference) {
+        pref.saveAccountPref(data)
+    }
+
+    suspend fun logout() {
+        pref.logout()
+    }
+
+    fun getAccountPref(): Flow<Preference> {
+        return pref.getAccountPref()
+    }
+
     fun getAllLayanan(): Flow<List<Layanan>> {
         return flowOf(layanan)
     }
@@ -85,9 +150,10 @@ class HotelRepository(
 
         fun getInstance(
             apiService: ApiService,
+            pref: PreferenceRepository
         ): HotelRepository =
             instance ?: synchronized(this) {
-                instance ?: HotelRepository(apiService)
+                instance ?: HotelRepository(apiService, pref)
             }.also { instance = it }
     }
 }

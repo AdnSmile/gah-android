@@ -1,5 +1,6 @@
 package com.vvwxx.gahandroid.ui.screen.detail
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,8 +29,9 @@ fun DetailJenisScreen(
     id: Int,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    context: Context = LocalContext.current,
     viewModel: DetailJenisViewModel = viewModel(
-        factory = ViewModelFactory(Injection.provideRepository())
+        factory = ViewModelFactory(Injection.provideRepository(context))
     ),
 ) {
 
@@ -61,8 +63,8 @@ fun DetailContent(
     Column(modifier = modifier) {
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+//                .weight(1f)
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -77,7 +79,7 @@ fun DetailContent(
                     contentDescription = null,
                     modifier = Modifier
                         .clickable { onBackClick() }
-                        .weight(1f, false)
+//                        .weight(1f, false)
                 )
             }
         }
