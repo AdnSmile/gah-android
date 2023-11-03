@@ -8,6 +8,7 @@ import com.vvwxx.gahandroid.data.model.dummyJenisKamar
 import com.vvwxx.gahandroid.data.model.dummyLayanan
 import com.vvwxx.gahandroid.data.remote.response.AccountDetailResponse
 import com.vvwxx.gahandroid.data.remote.response.LoginResponse
+import com.vvwxx.gahandroid.data.remote.response.RegisterResponse
 import com.vvwxx.gahandroid.data.remote.response.RiwayatReservasiItem
 import com.vvwxx.gahandroid.data.remote.response.WebResponse
 import com.vvwxx.gahandroid.data.remote.retrofit.ApiService
@@ -32,6 +33,10 @@ class HotelRepository(
     val loginResponse: StateFlow<UiState<WebResponse<LoginResponse>>>
         get() = _loginResponse
 
+    private val _registerResponse = MutableStateFlow<UiState<WebResponse<RegisterResponse>>?>(UiState.Loading)
+    val registerResponse: StateFlow<UiState<WebResponse<RegisterResponse>>?>
+        get() = _registerResponse
+
     private val _accountDetailResponse = MutableStateFlow<UiState<WebResponse<AccountDetailResponse>>>(UiState.Loading)
     val accountDetailResponse: StateFlow<UiState<WebResponse<AccountDetailResponse>>>
         get() = _accountDetailResponse
@@ -39,6 +44,12 @@ class HotelRepository(
     private val _listRiwayatReservasi = MutableStateFlow<UiState<List<RiwayatReservasiItem>>>(UiState.Loading)
     val listRiwayatReservasi: StateFlow<UiState<List<RiwayatReservasiItem>>>
         get() = _listRiwayatReservasi
+
+    private val _loginSuccess : MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
+    val loginSuccess : MutableStateFlow<LoginState> get() = _loginSuccess
+
+    private val _registerSuccess : MutableStateFlow<RegisterState> = MutableStateFlow(RegisterState())
+    val registerSuccess : MutableStateFlow<RegisterState> get() = _registerSuccess
 
     init {
         if (jenisKamar.isEmpty()) {
@@ -85,6 +96,22 @@ class HotelRepository(
         try {
             val response = apiService.loginAccount(email, password)
             _loginResponse.value = UiState.Success(response)
+            _loginSuccess.value = LoginState(res = response.data )
+            _registerSuccess.value = RegisterState()
+        } catch (e: Exception) {
+            _loginResponse.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun registerAccount(username: String, password: String,
+                                nama: String, email: String, noTelpon: String,
+                                alamat: String, noIdentitas: String) {
+
+        _registerResponse.value = UiState.Loading
+        try {
+            val response = apiService.registerAccount(username, password, nama, email, noTelpon, alamat, noIdentitas)
+            _registerResponse.value = UiState.Success(response)
+            _registerSuccess.value = RegisterState(res = response.data)
         } catch (e: Exception) {
             _loginResponse.value = UiState.Error(e.message.toString())
         }
@@ -117,6 +144,8 @@ class HotelRepository(
     }
 
     suspend fun logout() {
+        _loginSuccess.value = LoginState()
+        _registerResponse.value = null
         pref.logout()
     }
 
@@ -157,3 +186,15 @@ class HotelRepository(
             }.also { instance = it }
     }
 }
+
+data class LoginState(
+    val res: LoginResponse? = null,
+    val isLoading: Boolean = false,
+    val error: String = ""
+)
+
+data class RegisterState(
+    val res: RegisterResponse? = null,
+    val isLoading: Boolean = false,
+    val error: String = ""
+)

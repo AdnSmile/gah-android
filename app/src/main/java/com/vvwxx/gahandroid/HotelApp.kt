@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +32,9 @@ import com.vvwxx.gahandroid.ui.screen.detail.DetailJenisScreen
 import com.vvwxx.gahandroid.ui.screen.history.HistoryScreen
 import com.vvwxx.gahandroid.ui.screen.home.HomeScreen
 import com.vvwxx.gahandroid.ui.screen.login.LoginScreen
+import com.vvwxx.gahandroid.ui.screen.profile.ProfileScreen
+import com.vvwxx.gahandroid.ui.screen.register.RegisterScreen
+import com.vvwxx.gahandroid.ui.screen.setting.SettingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,19 +83,40 @@ fun HotelApp(
             }
 
             composable(Screen.Profile.route) {
-                // profile screen
+                // Profile screen
+
+                ProfileScreen(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+
+            composable(Screen.Setting.route) {
+                // setting screen
+
+                SettingScreen(
+                    navigateToLogin = { navController.navigate(Screen.Login.route) },
+                    navigateToHome = { navController.navigate(Screen.Home.route)},
+                    navigateTolProfile = {
+                        navController.navigate(Screen.Profile.route)
+                    })
             }
 
             composable(Screen.Login.route) {
                 // Login screen
 
                 LoginScreen(
-                    navigateBack = { navController.navigateUp() }
+                    navigateBack = { navController.navigateUp() },
+                    navigateToRegister = { navController.navigate(Screen.Register.route) },
+                    navigateToHome = {navController.navigate(Screen.Home.route)}
                 )
             }
 
             composable(Screen.Register.route) {
                 // Register screen
+
+                RegisterScreen {
+                    navController.navigateUp()
+                }
             }
 
             composable(
@@ -105,6 +129,17 @@ fun HotelApp(
                     navigateBack = { navController.navigateUp() },
                 )
             }
+
+//            composable(
+//                route = Screen.SettingProfile.route,
+//                arguments = listOf(navArgument("id") { type = NavType.IntType }),
+//            ) {
+//                val id = it.arguments?.getInt("id") ?: 0
+//                ProfileScreen(
+//                    id = id,
+//                    navigateBack = { navController.navigateUp() },
+//                )
+//            }
         }
 
     }
@@ -134,9 +169,9 @@ private fun BottomBar(
                 screen = Screen.History
             ),
             NavigationItem(
-                title = stringResource(id = R.string.menu_profile),
-                icon = Icons.Default.Person,
-                screen = Screen.Profile
+                title = stringResource(id = R.string.menu_setting),
+                icon = Icons.Default.Settings,
+                screen = Screen.Setting
             ),
         )
 

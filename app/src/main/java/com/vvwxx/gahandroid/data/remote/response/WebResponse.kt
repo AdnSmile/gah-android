@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class WebResponse<T>(
 
-    @field:SerializedName("code")
-    val code: Int,
+    @field:SerializedName("message")
+    val message: String,
 
     @field:SerializedName("status")
     val status: String,

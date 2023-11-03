@@ -5,4 +5,5 @@ data class Preference(
     val id: Int,
     val token: String,
     val isLogin: Boolean,
+    val role: String
 )

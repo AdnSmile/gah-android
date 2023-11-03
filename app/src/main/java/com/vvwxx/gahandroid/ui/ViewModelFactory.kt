@@ -6,6 +6,10 @@ import com.vvwxx.gahandroid.data.HotelRepository
 import com.vvwxx.gahandroid.ui.screen.detail.DetailJenisViewModel
 import com.vvwxx.gahandroid.ui.screen.history.HistoryViewModel
 import com.vvwxx.gahandroid.ui.screen.home.HomeViewModel
+import com.vvwxx.gahandroid.ui.screen.login.LoginViewModel
+import com.vvwxx.gahandroid.ui.screen.profile.ProfileViewModel
+import com.vvwxx.gahandroid.ui.screen.register.RegistrasiViewModel
+import com.vvwxx.gahandroid.ui.screen.setting.SettingViewModel
 
 class ViewModelFactory(
     private val repository: HotelRepository
@@ -23,6 +27,19 @@ class ViewModelFactory(
         if (modelClass.isAssignableFrom(HistoryViewModel::class.java)){
             return HistoryViewModel(repository) as T
         }
+        if (modelClass.isAssignableFrom(SettingViewModel::class.java)){
+            return SettingViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(ProfileViewModel::class.java)){
+            return ProfileViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(LoginViewModel::class.java)){
+            return LoginViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(RegistrasiViewModel::class.java)){
+            return RegistrasiViewModel(repository) as T
+        }
+
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
 }
