@@ -23,7 +23,7 @@ data class Account(
 	val nama: String,
 
 	@field:SerializedName("id_customer")
-	val idCustomer: Any,
+	val idCustomer: Int,
 
 	@field:SerializedName("email")
 	val email: String,

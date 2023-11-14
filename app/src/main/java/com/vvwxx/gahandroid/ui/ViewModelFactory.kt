@@ -9,6 +9,7 @@ import com.vvwxx.gahandroid.ui.screen.home.HomeViewModel
 import com.vvwxx.gahandroid.ui.screen.login.LoginViewModel
 import com.vvwxx.gahandroid.ui.screen.profile.ProfileViewModel
 import com.vvwxx.gahandroid.ui.screen.register.RegistrasiViewModel
+import com.vvwxx.gahandroid.ui.screen.reservasi.ReservasiViewModel
 import com.vvwxx.gahandroid.ui.screen.setting.SettingViewModel
 
 class ViewModelFactory(
@@ -38,6 +39,9 @@ class ViewModelFactory(
         }
         if (modelClass.isAssignableFrom(RegistrasiViewModel::class.java)){
             return RegistrasiViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(ReservasiViewModel::class.java)){
+            return ReservasiViewModel(repository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

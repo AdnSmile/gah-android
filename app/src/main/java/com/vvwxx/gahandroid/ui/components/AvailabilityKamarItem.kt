@@ -27,13 +27,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vvwxx.gahandroid.R
-import com.vvwxx.gahandroid.data.model.JenisKamar
+import com.vvwxx.gahandroid.data.remote.response.AvailabilityKamarResponse
+import com.vvwxx.gahandroid.data.remote.response.FKKamarInJenisKamar
 import com.vvwxx.gahandroid.ui.theme.GahandroidTheme
 import com.vvwxx.gahandroid.util.convertToRupiah
 
 @Composable
-fun JenisKamarItem(
-    jenisKamar: JenisKamar,
+fun AvailabilityKamarItem(
+    jenisKamar: AvailabilityKamarResponse,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -46,9 +47,18 @@ fun JenisKamarItem(
             defaultElevation = 3.dp
         ),
     ) {
+
+        val img = when(jenisKamar.idJenisKamar) {
+            1 -> R.drawable.superior_room
+            2 -> R.drawable.deluxe_room
+            3 -> R.drawable.executive_room
+            else -> R.drawable.junior_room
+        }
+
         Column {
             Image(
-                painter = painterResource(id = jenisKamar.image),
+                painter = painterResource(id = img
+                ),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -61,7 +71,7 @@ fun JenisKamarItem(
 
                 Row {
                     Text(
-                        text = jenisKamar.nama,
+                        text = jenisKamar.jenisKamar,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold
                         ),
@@ -78,7 +88,7 @@ fun JenisKamarItem(
                     )
 
                     Text(
-                        text = jenisKamar.kapasitas.toString(),
+                        text = jenisKamar.fKKamarInJenisKamar.kapasitas.toString(),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Normal
                         ),
@@ -88,7 +98,16 @@ fun JenisKamarItem(
                 }
 
                 Text(
-                    text = jenisKamar.tipeBed,
+                    text = "Tersedia ${jenisKamar.jumlahKamar} kamar",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier
+                        .padding(top = 2.dp)
+                )
+
+                Text(
+                    text = jenisKamar.fKKamarInJenisKamar.tipeBed,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Normal
                     ),
@@ -97,7 +116,7 @@ fun JenisKamarItem(
                 )
 
                 Text(
-                    text = "${jenisKamar.ukuranKamar} m2",
+                    text = "${jenisKamar.fKKamarInJenisKamar.ukuranKamar} m2",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Normal
                     ),
@@ -107,7 +126,7 @@ fun JenisKamarItem(
 
                 Box (modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = convertToRupiah(jenisKamar.tarif.toInt()),
+                        text = convertToRupiah(jenisKamar.hargaTerbaru),
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Normal
                         ),
@@ -123,19 +142,28 @@ fun JenisKamarItem(
 
 @Preview(showBackground = true)
 @Composable
-fun JenisKamarPreview() {
+fun AvailabilityKamarItemPreview() {
     GahandroidTheme {
-        JenisKamarItem(
-            jenisKamar = JenisKamar(
-                id = 1,
-                image = R.drawable.superior_room,
-                nama = "Superior",
-                deskripsi = "",
-                kapasitas = 2,
-                rincianKamar = "",
-                tipeBed = "1 Double atau 2 Twin",
-                ukuranKamar = 22,
-                tarif = 300000
+        AvailabilityKamarItem(
+            jenisKamar = AvailabilityKamarResponse(
+                namaSeason = "Natal dan tahun baru",
+                idJenisKamar = 1,
+                jumlahKamar = 2,
+                tarifDasar = 100000,
+                hargaTerbaru = 300000,
+                jenisKamar = "Superior",
+                tarifHarga = 200000,
+                jenisSeason = "high",
+                fKKamarInJenisKamar = FKKamarInJenisKamar(
+                    rincianKamar = "AC, Air minum kemasan gratis, Brankas dalam kamar (ukuran laptop), Fasilitas membuat kopi/teh, Jubah mandi, Layanan kamar (24 jam), Meja tulis, Minibar, Pembersihan kamar harian, Pengering rambut, Peralatan mandi gratis, Sandal, Telepon, Tempat tidur eks",
+                    nama = "Superior",
+                    ukuranKamar = 22,
+                    idJenisKamar = 1,
+                    tarifDasar = 100000,
+                    deskripsi = "Internet - WiFi Gratis",
+                    kapasitas = 2,
+                    tipeBed = "1 Double atau 2 Twin"
+                )
             )
         )
     }

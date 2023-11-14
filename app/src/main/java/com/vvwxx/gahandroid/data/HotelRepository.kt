@@ -7,6 +7,8 @@ import com.vvwxx.gahandroid.data.model.Preference
 import com.vvwxx.gahandroid.data.model.dummyJenisKamar
 import com.vvwxx.gahandroid.data.model.dummyLayanan
 import com.vvwxx.gahandroid.data.remote.response.AccountDetailResponse
+import com.vvwxx.gahandroid.data.remote.response.AvailabilityKamarResponse
+import com.vvwxx.gahandroid.data.remote.response.JenisKamarResponseItem
 import com.vvwxx.gahandroid.data.remote.response.LoginResponse
 import com.vvwxx.gahandroid.data.remote.response.RegisterResponse
 import com.vvwxx.gahandroid.data.remote.response.RiwayatReservasiItem
@@ -50,6 +52,15 @@ class HotelRepository(
 
     private val _registerSuccess : MutableStateFlow<RegisterState> = MutableStateFlow(RegisterState())
     val registerSuccess : MutableStateFlow<RegisterState> get() = _registerSuccess
+
+    // check ketersediian kamar
+    private val _ketersediaanKamarResponse = MutableStateFlow<UiState<WebResponse<List<AvailabilityKamarResponse>>>>(UiState.Loading)
+    val ketersediaanKamarResponse: StateFlow<UiState<WebResponse<List<AvailabilityKamarResponse>>>>
+        get() = _ketersediaanKamarResponse
+
+    private val _listJenisKamar = MutableStateFlow<UiState<WebResponse<List<JenisKamarResponseItem>>>>(UiState.Loading)
+    val listJenisKamar: StateFlow<UiState<WebResponse<List<JenisKamarResponseItem>>>>
+        get() = _listJenisKamar
 
     init {
         if (jenisKamar.isEmpty()) {
@@ -139,8 +150,35 @@ class HotelRepository(
         }
     }
 
+    suspend fun getKetersediaanKamar(token: String, checkin: String, checkout: String, dewasa: Int, anak: Int) {
+
+        _ketersediaanKamarResponse.value = UiState.Loading
+
+        try {
+            val response = apiService.ketersediaanKamar("Bearer $token", checkin, checkout, dewasa, anak)
+            _ketersediaanKamarResponse.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _ketersediaanKamarResponse.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun getJenisKamar() {
+        _listJenisKamar.value = UiState.Loading
+
+        try {
+            val response = apiService.getJenisKamar()
+            _listJenisKamar.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _listJenisKamar.value = UiState.Error(e.message.toString())
+        }
+    }
+
     suspend fun saveAccountPref(data: Preference) {
         pref.saveAccountPref(data)
+    }
+
+    suspend fun setHargaTerbaru(harga: Int) {
+        pref.setHargaTerbaru(harga)
     }
 
     suspend fun logout() {

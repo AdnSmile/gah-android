@@ -18,7 +18,9 @@ class PreferenceRepository private constructor(private val dataStore: DataStore<
                 it[ID_KEY] ?: 0,
                 it[TOKEN_KEY] ?: "",
                 it[LOGIN_KEY] ?: false,
-                it[ROLE_KEY] ?: ""
+                it[ROLE_KEY] ?: "",
+                it[ID_CUSTOMER] ?: 0,
+                it[HARGA_UPDATE] ?: 0
             )
         }
     }
@@ -30,6 +32,14 @@ class PreferenceRepository private constructor(private val dataStore: DataStore<
             it[TOKEN_KEY] = pref.token
             it[LOGIN_KEY] = pref.isLogin
             it[ROLE_KEY] = pref.role
+            it[ID_CUSTOMER] = pref.idCustomer
+        }
+    }
+
+    suspend fun setHargaTerbaru(harga: Int) {
+
+        dataStore.edit {
+            it[HARGA_UPDATE] = harga
         }
     }
 
@@ -48,6 +58,8 @@ class PreferenceRepository private constructor(private val dataStore: DataStore<
         private val TOKEN_KEY = stringPreferencesKey("token")
         private val LOGIN_KEY = booleanPreferencesKey("login")
         private val ROLE_KEY = stringPreferencesKey("role")
+        private val ID_CUSTOMER = intPreferencesKey("id_customer")
+        private val HARGA_UPDATE = intPreferencesKey("harga_terbaru")
 
         fun getInstance(dataStore: DataStore<Preferences>): PreferenceRepository {
 

@@ -86,4 +86,7 @@ dependencies {
 
     // Icon
     implementation ("androidx.compose.material:material-icons-extended:1.4.3")
+
+    // date picker
+    implementation ("androidx.compose.material3:material3:1.2.0-alpha02")
 }

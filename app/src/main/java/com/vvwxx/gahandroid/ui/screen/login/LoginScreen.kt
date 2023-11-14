@@ -103,7 +103,9 @@ fun LoginScreen(
                         id = uiState.data.data.account.idAccount,
                         token = uiState.data.data.token,
                         isLogin = true,
-                        role = uiState.data.data.account.role
+                        role = uiState.data.data.account.role,
+                        idCustomer = uiState.data.data.account.idCustomer,
+                        hargaTerbaruKamar = 0
                     )
                 )
             }

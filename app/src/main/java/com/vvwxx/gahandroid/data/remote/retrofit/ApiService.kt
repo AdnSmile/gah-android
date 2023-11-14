@@ -1,6 +1,8 @@
 package com.vvwxx.gahandroid.data.remote.retrofit
 
 import com.vvwxx.gahandroid.data.remote.response.AccountDetailResponse
+import com.vvwxx.gahandroid.data.remote.response.AvailabilityKamarResponse
+import com.vvwxx.gahandroid.data.remote.response.JenisKamarResponseItem
 import com.vvwxx.gahandroid.data.remote.response.LoginResponse
 import com.vvwxx.gahandroid.data.remote.response.RegisterResponse
 import com.vvwxx.gahandroid.data.remote.response.WebResponse
@@ -26,6 +28,9 @@ interface ApiService {
         @Path("id") id: Int
     ) : WebResponse<AccountDetailResponse>
 
+    @GET("jenisKamar")
+    suspend fun getJenisKamar() : WebResponse<List<JenisKamarResponseItem>>
+
     @FormUrlEncoded
     @POST("register")
     suspend fun registerAccount(
@@ -37,4 +42,14 @@ interface ApiService {
         @Field("alamat") alamat: String,
         @Field("no_identitas") noIdentitas: String,
     ) : WebResponse<RegisterResponse>
+
+    @FormUrlEncoded
+    @POST("ketersediianKamar")
+    suspend fun ketersediaanKamar(
+        @Header("Authorization") token: String,
+        @Field("tgl_checkin") tglCheckin: String,
+        @Field("tgl_checkout") tglCheckout: String,
+        @Field("jumlah_dewasa") jumlahDewasa: Int,
+        @Field("jumlah_anak") jumlahAnak: Int,
+    ) : WebResponse<List<AvailabilityKamarResponse>>
 }

@@ -35,8 +35,6 @@ fun DetailJenisScreen(
     ),
 ) {
 
-    val context = LocalContext.current
-
     viewModel.uiState.collectAsState(initial = UiState.Loading).value.let { uiState ->
         when (uiState) {
             is UiState.Loading -> {

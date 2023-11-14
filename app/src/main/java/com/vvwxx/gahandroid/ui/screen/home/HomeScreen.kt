@@ -72,7 +72,6 @@ fun HomeContent(
     navigateToDetail: (Int) -> Unit
 ) {
 
-
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

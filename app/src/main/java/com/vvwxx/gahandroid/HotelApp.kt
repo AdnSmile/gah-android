@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -28,12 +29,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.vvwxx.gahandroid.ui.navigation.NavigationItem
 import com.vvwxx.gahandroid.ui.navigation.Screen
+import com.vvwxx.gahandroid.ui.screen.booking.BookingScreen
 import com.vvwxx.gahandroid.ui.screen.detail.DetailJenisScreen
 import com.vvwxx.gahandroid.ui.screen.history.HistoryScreen
 import com.vvwxx.gahandroid.ui.screen.home.HomeScreen
 import com.vvwxx.gahandroid.ui.screen.login.LoginScreen
 import com.vvwxx.gahandroid.ui.screen.profile.ProfileScreen
 import com.vvwxx.gahandroid.ui.screen.register.RegisterScreen
+import com.vvwxx.gahandroid.ui.screen.reservasi.DetailKetersediaanScreen
+import com.vvwxx.gahandroid.ui.screen.reservasi.ReservasiScreen
 import com.vvwxx.gahandroid.ui.screen.setting.SettingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +75,23 @@ fun HotelApp(
                         navController.navigate(Screen.DetailJenisKamar.createRoute(id))
                     },
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
+                )
+            }
+
+            composable(Screen.Reservasi.route) {
+
+                ReservasiScreen(
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) { id ->
+
+                    navController.navigate(Screen.DetailKetersediaanKamar.createRoute(id))
+                }
+
+            }
+
+            composable(Screen.Booking.route) {
+
+                BookingScreen(
+                    navigateBack = { navController.navigateUp() },
                 )
             }
 
@@ -130,6 +151,17 @@ fun HotelApp(
                 )
             }
 
+            composable(
+                route = Screen.DetailKetersediaanKamar.route,
+                arguments = listOf(navArgument("id") { type = NavType.IntType}),
+            ) {
+                val id = it.arguments?.getInt("id") ?: 0
+                DetailKetersediaanScreen(
+                    id = id,
+                    navigateBack = {navController.navigateUp()}
+                )
+            }
+
 //            composable(
 //                route = Screen.SettingProfile.route,
 //                arguments = listOf(navArgument("id") { type = NavType.IntType }),
@@ -162,6 +194,11 @@ private fun BottomBar(
                 title = stringResource(id = R.string.menu_home),
                 icon = Icons.Default.Home,
                 screen = Screen.Home
+            ),
+            NavigationItem(
+                title = stringResource(id = R.string.menu_reservasi),
+                icon = Icons.Default.CalendarToday,
+                screen = Screen.Reservasi
             ),
             NavigationItem(
                 title = stringResource(id = R.string.menu_history),
