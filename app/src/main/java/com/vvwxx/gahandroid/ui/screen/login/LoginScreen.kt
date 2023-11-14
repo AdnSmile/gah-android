@@ -105,7 +105,11 @@ fun LoginScreen(
                         isLogin = true,
                         role = uiState.data.data.account.role,
                         idCustomer = uiState.data.data.account.idCustomer,
-                        hargaTerbaruKamar = 0
+                        hargaTerbaruKamar = 0,
+                        anak = 0,
+                        dewasa = 0,
+                        checkin = "",
+                        checkout = ""
                     )
                 )
             }

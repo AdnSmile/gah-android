@@ -6,8 +6,12 @@ import com.vvwxx.gahandroid.data.model.Layanan
 import com.vvwxx.gahandroid.data.model.Preference
 import com.vvwxx.gahandroid.data.model.dummyJenisKamar
 import com.vvwxx.gahandroid.data.model.dummyLayanan
+import com.vvwxx.gahandroid.data.remote.request.FasilitasRequestItem
+import com.vvwxx.gahandroid.data.remote.request.KamarRequestItem
 import com.vvwxx.gahandroid.data.remote.response.AccountDetailResponse
+import com.vvwxx.gahandroid.data.remote.response.AddReservasiResponse
 import com.vvwxx.gahandroid.data.remote.response.AvailabilityKamarResponse
+import com.vvwxx.gahandroid.data.remote.response.FasilitasResponseItem
 import com.vvwxx.gahandroid.data.remote.response.JenisKamarResponseItem
 import com.vvwxx.gahandroid.data.remote.response.LoginResponse
 import com.vvwxx.gahandroid.data.remote.response.RegisterResponse
@@ -62,6 +66,14 @@ class HotelRepository(
     val listJenisKamar: StateFlow<UiState<WebResponse<List<JenisKamarResponseItem>>>>
         get() = _listJenisKamar
 
+    private val _listFasilitas = MutableStateFlow<UiState<WebResponse<List<FasilitasResponseItem>>>>(UiState.Loading)
+    val listFasilitas: StateFlow<UiState<WebResponse<List<FasilitasResponseItem>>>>
+        get() = _listFasilitas
+
+    private val _addReservasiResponse = MutableStateFlow<UiState<WebResponse<AddReservasiResponse>>> (UiState.Loading)
+    val addReservasiResponse: StateFlow<UiState<WebResponse<AddReservasiResponse>>>
+        get() = _addReservasiResponse
+
     init {
         if (jenisKamar.isEmpty()) {
             dummyJenisKamar.forEach {
@@ -99,6 +111,18 @@ class HotelRepository(
             jenisKamar = jenisKamar,
             layanan = layanan
         )
+    }
+
+    suspend fun addReservasi(token: String, id: Int, checkin: String, checkout: String, dewasa: Int, anak: Int,
+                             permintaan: String, kamar: Array<KamarRequestItem>, fasilitas: Array<FasilitasRequestItem>) {
+
+        _addReservasiResponse.value = UiState.Loading
+        try {
+            val response = apiService.addReservasi("Bearer $token", id, checkin, checkout, dewasa, anak, permintaan, kamar, fasilitas)
+            _addReservasiResponse.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _addReservasiResponse.value = UiState.Error(e.message.toString())
+        }
     }
 
     suspend fun loginAccount(email: String, password: String) {
@@ -173,12 +197,27 @@ class HotelRepository(
         }
     }
 
+    suspend fun getFasilitas(token: String) {
+        _listFasilitas.value = UiState.Loading
+
+        try {
+            val response = apiService.getFasilitas("Bearer $token")
+            _listFasilitas.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _listFasilitas.value = UiState.Error(e.message.toString())
+        }
+    }
+
     suspend fun saveAccountPref(data: Preference) {
         pref.saveAccountPref(data)
     }
 
     suspend fun setHargaTerbaru(harga: Int) {
         pref.setHargaTerbaru(harga)
+    }
+
+    suspend fun setReservasiPref(dewasa: Int, anak: Int, checkin: String, checkout: String) {
+        pref.setReservasiPref(dewasa, anak, checkin, checkout)
     }
 
     suspend fun logout() {

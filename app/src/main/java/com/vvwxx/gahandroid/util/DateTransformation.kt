@@ -1,5 +1,7 @@
 package com.vvwxx.gahandroid.util
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
@@ -58,5 +60,9 @@ fun convertToRupiah(uang: Int): String {
     }
 
     return numberFormat.format(uang)
+}
+
+public fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 

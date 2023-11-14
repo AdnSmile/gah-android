@@ -7,5 +7,9 @@ data class Preference(
     val isLogin: Boolean,
     val role: String,
     val idCustomer: Int,
-    val hargaTerbaruKamar: Int
+    val hargaTerbaruKamar: Int,
+    val dewasa: Int,
+    val anak: Int,
+    val checkin: String,
+    val checkout: String
 )

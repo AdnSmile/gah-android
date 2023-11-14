@@ -1,7 +1,6 @@
 package com.vvwxx.gahandroid.ui.screen.reservasi
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +44,7 @@ import com.vvwxx.gahandroid.ui.common.UiState
 import com.vvwxx.gahandroid.ui.components.AvailabilityKamarItem
 import com.vvwxx.gahandroid.util.DateTransformation
 import com.vvwxx.gahandroid.util.convertDateFormat
+import com.vvwxx.gahandroid.util.showToast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -201,6 +201,7 @@ fun ReservasiScreen(
                             convertDateFormat(checkout),
                             dewasa.toInt(), anak.toInt()
                         )
+                        viewModel.setReservasiPref(dewasa.toInt(), anak.toInt(), checkin, checkout)
                         checkin = ""
                         checkout = ""
                         dewasa = ""
@@ -269,8 +270,4 @@ fun KetersediianContent(
 
         }
     }
-}
-
-private fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }

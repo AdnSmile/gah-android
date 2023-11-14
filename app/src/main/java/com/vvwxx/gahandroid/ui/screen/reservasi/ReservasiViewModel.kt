@@ -28,6 +28,12 @@ class ReservasiViewModel(
         }
     }
 
+    fun setReservasiPref(dewasa: Int, anak: Int, checkin: String, checkout: String) {
+        viewModelScope.launch {
+            repository.setReservasiPref(dewasa, anak, checkin, checkout)
+        }
+    }
+
     fun getKetersediaanKamar(token: String, checkin: String, checkout: String, dewasa: Int, anak: Int) {
 
         viewModelScope.launch {

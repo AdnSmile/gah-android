@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,6 +46,7 @@ fun DetailKetersediaanScreen(
     modifier: Modifier = Modifier,
     id: Int,
     navigateBack: () -> Unit,
+    navigateToBooking: (Int) -> Unit,
     context: Context = LocalContext.current,
     viewModel: ReservasiViewModel = viewModel(
         factory = ViewModelFactory(Injection.provideRepository(context))
@@ -87,7 +89,9 @@ fun DetailKetersediaanScreen(
                     rincian = kamar.rincianKamar,
                     kapasitas = kamar.kapasitas,
                     img = img,
-                    onBackClick = navigateBack
+                    onBackClick = navigateBack,
+                    navigateToBooking = navigateToBooking,
+                    id = kamar.idJenisKamar
                 )
 
             }
@@ -103,6 +107,7 @@ fun convertToData(list: List<JenisKamarResponseItem>, id: Int): JenisKamarRespon
 
 @Composable
 fun DetailContent(
+    id: Int,
     nama: String,
     deskripsi: String,
     harga: String,
@@ -115,7 +120,8 @@ fun DetailContent(
     viewModel: ReservasiViewModel = viewModel(
         factory = ViewModelFactory(Injection.provideRepository(context))
     ),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    navigateToBooking: (Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -235,6 +241,21 @@ fun DetailContent(
                     fontWeight = FontWeight.Normal
                 ),
             )
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            FilledTonalButton(
+                onClick = { navigateToBooking(id) },
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(0.6f)
+            ) {
+                Text(text = "Booking")
+            }
         }
     }
 }

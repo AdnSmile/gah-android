@@ -16,9 +16,13 @@ sealed class Screen(val route: String) {
 
     object Reservasi : Screen("reservasi")
 
-    object Booking : Screen("booking")
+    object Booking : Screen("booking/{id}") {
+        fun createRoute(id: Int) = "booking/$id"
+    }
 
-    object KamarTersedia : Screen("kamar_tersedia")
+    object Resume : Screen("resume/{id}") {
+        fun createRoute(id: Int) = "resume/$id"
+    }
 
     object DetailJenisKamar : Screen("home/{id}") {
         fun createRoute(id: Int) = "home/$id"

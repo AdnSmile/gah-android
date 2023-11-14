@@ -20,7 +20,11 @@ class PreferenceRepository private constructor(private val dataStore: DataStore<
                 it[LOGIN_KEY] ?: false,
                 it[ROLE_KEY] ?: "",
                 it[ID_CUSTOMER] ?: 0,
-                it[HARGA_UPDATE] ?: 0
+                it[HARGA_UPDATE] ?: 0,
+                it[DEWASA] ?: 0,
+                it[ANAK] ?: 0,
+                it[CHECK_IN] ?: "",
+                it[CHECK_OUT] ?: ""
             )
         }
     }
@@ -43,6 +47,16 @@ class PreferenceRepository private constructor(private val dataStore: DataStore<
         }
     }
 
+    suspend fun setReservasiPref(dewasa: Int, anak: Int, checkin: String, checkout: String) {
+
+        dataStore.edit {
+            it[DEWASA] = dewasa
+            it[ANAK] = anak
+            it[CHECK_IN] = checkin
+            it[CHECK_OUT] = checkout
+        }
+    }
+
     suspend fun logout() {
         dataStore.edit {
             it.clear()
@@ -60,6 +74,10 @@ class PreferenceRepository private constructor(private val dataStore: DataStore<
         private val ROLE_KEY = stringPreferencesKey("role")
         private val ID_CUSTOMER = intPreferencesKey("id_customer")
         private val HARGA_UPDATE = intPreferencesKey("harga_terbaru")
+        private val DEWASA = intPreferencesKey("dewasa")
+        private val ANAK = intPreferencesKey("anak")
+        private val CHECK_IN = stringPreferencesKey("checkin")
+        private val CHECK_OUT = stringPreferencesKey("checkout")
 
         fun getInstance(dataStore: DataStore<Preferences>): PreferenceRepository {
 

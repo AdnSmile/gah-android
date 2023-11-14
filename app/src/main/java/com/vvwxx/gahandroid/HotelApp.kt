@@ -38,6 +38,7 @@ import com.vvwxx.gahandroid.ui.screen.profile.ProfileScreen
 import com.vvwxx.gahandroid.ui.screen.register.RegisterScreen
 import com.vvwxx.gahandroid.ui.screen.reservasi.DetailKetersediaanScreen
 import com.vvwxx.gahandroid.ui.screen.reservasi.ReservasiScreen
+import com.vvwxx.gahandroid.ui.screen.resume.ResumeScreen
 import com.vvwxx.gahandroid.ui.screen.setting.SettingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,10 +89,17 @@ fun HotelApp(
 
             }
 
-            composable(Screen.Booking.route) {
-
+            composable(
+                route = Screen.Booking.route,
+                arguments = listOf(navArgument("id") { type = NavType.IntType }),
+            ) {
+                val id = it.arguments?.getInt("id") ?: 0
                 BookingScreen(
+                    id = id,
                     navigateBack = { navController.navigateUp() },
+                    navigateToResume = {idBook ->
+                        navController.navigate(Screen.Resume.createRoute(idBook))
+                    }
                 )
             }
 
@@ -157,6 +165,21 @@ fun HotelApp(
             ) {
                 val id = it.arguments?.getInt("id") ?: 0
                 DetailKetersediaanScreen(
+                    id = id,
+                    navigateBack = {navController.navigateUp()},
+                    navigateToBooking = {idBook ->
+
+                        navController.navigate(Screen.Booking.createRoute(idBook))
+                    }
+                )
+            }
+
+            composable(
+                route = Screen.Resume.route,
+                arguments = listOf(navArgument("id") { type = NavType.IntType})
+            ) {
+                val id = it.arguments?.getInt("id") ?: 0
+                ResumeScreen(
                     id = id,
                     navigateBack = {navController.navigateUp()}
                 )

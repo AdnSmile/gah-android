@@ -1,7 +1,11 @@
 package com.vvwxx.gahandroid.data.remote.retrofit
 
+import com.vvwxx.gahandroid.data.remote.request.FasilitasRequestItem
+import com.vvwxx.gahandroid.data.remote.request.KamarRequestItem
 import com.vvwxx.gahandroid.data.remote.response.AccountDetailResponse
+import com.vvwxx.gahandroid.data.remote.response.AddReservasiResponse
 import com.vvwxx.gahandroid.data.remote.response.AvailabilityKamarResponse
+import com.vvwxx.gahandroid.data.remote.response.FasilitasResponseItem
 import com.vvwxx.gahandroid.data.remote.response.JenisKamarResponseItem
 import com.vvwxx.gahandroid.data.remote.response.LoginResponse
 import com.vvwxx.gahandroid.data.remote.response.RegisterResponse
@@ -52,4 +56,25 @@ interface ApiService {
         @Field("jumlah_dewasa") jumlahDewasa: Int,
         @Field("jumlah_anak") jumlahAnak: Int,
     ) : WebResponse<List<AvailabilityKamarResponse>>
+
+    @FormUrlEncoded
+    @POST("newReservasiCus/{id}")
+    suspend fun addReservasi(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Field("tgl_checkin") tglCheckin: String,
+        @Field("tgl_checkout") tglCheckout: String,
+        @Field("jumlah_dewasa") jumlahDewasa: Int,
+        @Field("jumlah_anak") jumlahAnak: Int,
+        @Field("permintaan_khusus") permintaan: String,
+        @Field("kamar") kamar: Array<KamarRequestItem>,
+        @Field("fasilitas") fasilitas: Array<FasilitasRequestItem>,
+    ) : WebResponse<AddReservasiResponse>
+
+
+    @FormUrlEncoded
+    @GET("fasilitas")
+    suspend fun getFasilitas(
+        @Header("Authorization") token: String,
+    ) : WebResponse<List<FasilitasResponseItem>>
 }

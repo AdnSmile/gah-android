@@ -2,11 +2,11 @@ package com.vvwxx.gahandroid.data.remote.request
 
 import com.google.gson.annotations.SerializedName
 
-data class KamarRequest(
-
-	@field:SerializedName("KamarRequest")
-	val kamarRequest: List<KamarRequestItem>
-)
+//data class KamarRequest(
+//
+//	@field:SerializedName("KamarRequest")
+//	val kamarRequest: List<KamarRequestItem>
+//)
 
 data class KamarRequestItem(
 
