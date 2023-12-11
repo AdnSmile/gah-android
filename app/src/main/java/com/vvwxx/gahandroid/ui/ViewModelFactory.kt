@@ -7,10 +7,12 @@ import com.vvwxx.gahandroid.ui.screen.booking.BookingViewModel
 import com.vvwxx.gahandroid.ui.screen.detail.DetailJenisViewModel
 import com.vvwxx.gahandroid.ui.screen.history.HistoryViewModel
 import com.vvwxx.gahandroid.ui.screen.home.HomeViewModel
+import com.vvwxx.gahandroid.ui.screen.laporan.LaporanViewModel
 import com.vvwxx.gahandroid.ui.screen.login.LoginViewModel
 import com.vvwxx.gahandroid.ui.screen.profile.ProfileViewModel
 import com.vvwxx.gahandroid.ui.screen.register.RegistrasiViewModel
 import com.vvwxx.gahandroid.ui.screen.reservasi.ReservasiViewModel
+import com.vvwxx.gahandroid.ui.screen.resume.ResumeViewModel
 import com.vvwxx.gahandroid.ui.screen.setting.SettingViewModel
 
 class ViewModelFactory(
@@ -46,6 +48,12 @@ class ViewModelFactory(
         }
         if (modelClass.isAssignableFrom(BookingViewModel::class.java)){
             return BookingViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(ResumeViewModel::class.java)){
+            return ResumeViewModel(repository) as T
+        }
+        if (modelClass.isAssignableFrom(LaporanViewModel::class.java)){
+            return LaporanViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

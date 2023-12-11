@@ -42,6 +42,7 @@ import com.vvwxx.gahandroid.di.Injection
 import com.vvwxx.gahandroid.ui.ViewModelFactory
 import com.vvwxx.gahandroid.ui.common.UiState
 import com.vvwxx.gahandroid.ui.components.AvailabilityKamarItem
+import com.vvwxx.gahandroid.ui.components.NotLoginScreen
 import com.vvwxx.gahandroid.util.DateTransformation
 import com.vvwxx.gahandroid.util.convertDateFormat
 import com.vvwxx.gahandroid.util.showToast
@@ -54,6 +55,7 @@ fun ReservasiScreen(
     viewModel: ReservasiViewModel = viewModel(
         factory = ViewModelFactory(Injection.provideRepository(context))
     ),
+    navigateToLogin: () -> Unit,
     navigateToDetail: (Int) -> Unit,
 ) {
 
@@ -66,6 +68,10 @@ fun ReservasiScreen(
 
     var token by rememberSaveable { mutableStateOf("") }
 
+    var isLogin by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     var isOpen by rememberSaveable {
         mutableStateOf(false)
     }
@@ -73,9 +79,12 @@ fun ReservasiScreen(
     LaunchedEffect(preferenceState) {
         val preference = preferenceState
         if (preference != null) {
+            isLogin = preference.isLogin
             token = preference.token
         }
     }
+
+
 
     val maxChar = 8
 
@@ -86,12 +95,16 @@ fun ReservasiScreen(
             is UiState.Success -> {
 //                isOpen = true
                 if (isOpen) {
-                    KetersediianContent(
-                        jenisKamar = uiState.data.data,
-                        isOpen = isOpen,
-                        onOpenChange = { newIsOpen -> isOpen = newIsOpen },
-                        navigateToDetail = navigateToDetail
-                    )
+                    if (!isLogin) NotLoginScreen(navigateToLogin = navigateToLogin)
+                    else {
+                        KetersediianContent(
+                            jenisKamar = uiState.data.data,
+                            isOpen = isOpen,
+                            onOpenChange = { newIsOpen -> isOpen = newIsOpen },
+                            navigateToDetail = navigateToDetail
+                        )
+                    }
+
                 }
 
             }
@@ -233,8 +246,6 @@ fun KetersediianContent(
     navigateToDetail: (Int) -> Unit
 ) {
 
-
-    
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

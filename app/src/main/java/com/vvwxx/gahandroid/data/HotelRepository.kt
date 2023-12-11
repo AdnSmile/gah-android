@@ -8,12 +8,16 @@ import com.vvwxx.gahandroid.data.model.dummyJenisKamar
 import com.vvwxx.gahandroid.data.model.dummyLayanan
 import com.vvwxx.gahandroid.data.remote.request.FasilitasRequestItem
 import com.vvwxx.gahandroid.data.remote.request.KamarRequestItem
+import com.vvwxx.gahandroid.data.remote.request.ReservasiRequest
 import com.vvwxx.gahandroid.data.remote.response.AccountDetailResponse
 import com.vvwxx.gahandroid.data.remote.response.AddReservasiResponse
 import com.vvwxx.gahandroid.data.remote.response.AvailabilityKamarResponse
+import com.vvwxx.gahandroid.data.remote.response.CustomerBaruResponse
+import com.vvwxx.gahandroid.data.remote.response.DetailReservasiResponse
 import com.vvwxx.gahandroid.data.remote.response.FasilitasResponseItem
 import com.vvwxx.gahandroid.data.remote.response.JenisKamarResponseItem
 import com.vvwxx.gahandroid.data.remote.response.LoginResponse
+import com.vvwxx.gahandroid.data.remote.response.PemesanTerbanyakResponse
 import com.vvwxx.gahandroid.data.remote.response.RegisterResponse
 import com.vvwxx.gahandroid.data.remote.response.RiwayatReservasiItem
 import com.vvwxx.gahandroid.data.remote.response.WebResponse
@@ -54,8 +58,14 @@ class HotelRepository(
     private val _loginSuccess : MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
     val loginSuccess : MutableStateFlow<LoginState> get() = _loginSuccess
 
+    private val _addReservasiSuccess : MutableStateFlow<AddReservasiState> = MutableStateFlow(AddReservasiState())
+    val addReservasiSuccess  : MutableStateFlow<AddReservasiState> get() = _addReservasiSuccess
+
     private val _registerSuccess : MutableStateFlow<RegisterState> = MutableStateFlow(RegisterState())
     val registerSuccess : MutableStateFlow<RegisterState> get() = _registerSuccess
+
+    private val _detailReservasiResponse : MutableStateFlow<UiState<WebResponse<DetailReservasiResponse>>> = MutableStateFlow(UiState.Loading)
+    val detailReservasiResponse : StateFlow<UiState<WebResponse<DetailReservasiResponse>>> get() = _detailReservasiResponse
 
     // check ketersediian kamar
     private val _ketersediaanKamarResponse = MutableStateFlow<UiState<WebResponse<List<AvailabilityKamarResponse>>>>(UiState.Loading)
@@ -73,6 +83,15 @@ class HotelRepository(
     private val _addReservasiResponse = MutableStateFlow<UiState<WebResponse<AddReservasiResponse>>> (UiState.Loading)
     val addReservasiResponse: StateFlow<UiState<WebResponse<AddReservasiResponse>>>
         get() = _addReservasiResponse
+
+    // laporan
+    private val _listCustomerBaru = MutableStateFlow<UiState<WebResponse<List<CustomerBaruResponse>>>>(UiState.Loading)
+    val listCustomerBaru: StateFlow<UiState<WebResponse<List<CustomerBaruResponse>>>>
+        get() = _listCustomerBaru
+
+    private val _listPemesanTerbanyak = MutableStateFlow<UiState<WebResponse<List<PemesanTerbanyakResponse>>>>(UiState.Loading)
+    val listPemesanTerbanyak: StateFlow<UiState<WebResponse<List<PemesanTerbanyakResponse>>>>
+        get() = _listPemesanTerbanyak
 
     init {
         if (jenisKamar.isEmpty()) {
@@ -114,14 +133,32 @@ class HotelRepository(
     }
 
     suspend fun addReservasi(token: String, id: Int, checkin: String, checkout: String, dewasa: Int, anak: Int,
-                             permintaan: String, kamar: Array<KamarRequestItem>, fasilitas: Array<FasilitasRequestItem>) {
+                             permintaan: String, kamar: List<KamarRequestItem>, fasilitas: List<FasilitasRequestItem>) {
 
         _addReservasiResponse.value = UiState.Loading
         try {
-            val response = apiService.addReservasi("Bearer $token", id, checkin, checkout, dewasa, anak, permintaan, kamar, fasilitas)
+            val response = apiService.addReservasi("Bearer $token", id,
+                ReservasiRequest(
+                        dewasa, anak, permintaan,
+                        checkin, checkout, kamar, fasilitas
+                    )
+                )
             _addReservasiResponse.value = UiState.Success(response)
+            _addReservasiSuccess.value = AddReservasiState(res = response.data)
+            _loginSuccess.value = LoginState()
         } catch (e: Exception) {
             _addReservasiResponse.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun getDetailReservasi(token: String, id: Int) {
+
+        _detailReservasiResponse.value = UiState.Loading
+        try {
+            val response = apiService.getDetailReservasi("Bearer $token", id)
+            _detailReservasiResponse.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _detailReservasiResponse.value = UiState.Error(e.message.toString())
         }
     }
 
@@ -194,6 +231,28 @@ class HotelRepository(
             _listJenisKamar.value = UiState.Success(response)
         } catch (e: Exception) {
             _listJenisKamar.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun getPemesanTerbanyak(token: String, tahun: Int) {
+        _listPemesanTerbanyak.value = UiState.Loading
+
+        try {
+            val response = apiService.getPemesanTerbanyak("Bearer $token", tahun)
+            _listPemesanTerbanyak.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _listPemesanTerbanyak.value = UiState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun getCustomerBaru(token: String, tahun: Int) {
+        _listCustomerBaru.value = UiState.Loading
+
+        try {
+            val response = apiService.getCustomerBaru("Bearer $token", tahun)
+            _listCustomerBaru.value = UiState.Success(response)
+        } catch (e: Exception) {
+            _listCustomerBaru.value = UiState.Error(e.message.toString())
         }
     }
 
@@ -272,6 +331,12 @@ data class LoginState(
 
 data class RegisterState(
     val res: RegisterResponse? = null,
+    val isLoading: Boolean = false,
+    val error: String = ""
+)
+
+data class AddReservasiState(
+    val res: AddReservasiResponse? = null,
     val isLoading: Boolean = false,
     val error: String = ""
 )

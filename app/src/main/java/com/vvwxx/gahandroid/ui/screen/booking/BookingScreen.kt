@@ -31,7 +31,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,7 +44,6 @@ import com.vvwxx.gahandroid.di.Injection
 import com.vvwxx.gahandroid.ui.ViewModelFactory
 import com.vvwxx.gahandroid.ui.common.UiState
 import com.vvwxx.gahandroid.util.convertDateFormat
-import com.vvwxx.gahandroid.util.showToast
 
 @Composable
 fun BookingScreen(
@@ -66,19 +64,17 @@ fun BookingScreen(
     var anak by rememberSaveable { mutableStateOf("") }
     var checkin by rememberSaveable { mutableStateOf("") }
     var checkout by rememberSaveable { mutableStateOf("") }
-    var jenisKamar by rememberSaveable { mutableStateOf("") }
     var namaJenisKamar by rememberSaveable { mutableStateOf("") }
-//    var fasilitas by remember { mutableStateOf(listOf(FasilitasResponseItem(0, "", 0, ""))) }
-//    var fasilitas by remember { mutableStateOf(listOf(FasilitasResponseItem(0, "", 0, ""))) }
     var fasilitas: List<FasilitasResponseItem> = emptyList()
     var mExpanded by rememberSaveable {
         mutableStateOf(false)
     }
     var token by rememberSaveable { mutableStateOf("") }
-    var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
     var idFasilitas by remember { mutableStateOf("") }
-    var mSelectedId by remember { mutableStateOf("") }
     var idCustomer by remember { mutableStateOf(0) }
+    var idResrvasi by rememberSaveable { mutableStateOf(0) }
+
+    val reservasiState = viewModel.addReservasiSuccess.collectAsState().value
 
     val icon = if (mExpanded)
         Icons.Filled.KeyboardArrowUp
@@ -97,6 +93,12 @@ fun BookingScreen(
             idCustomer = preference.idCustomer
         }
     }
+
+    LaunchedEffect(key1 = reservasiState.res, block = {
+        if (reservasiState.res != null) {
+            navigateToResume(idResrvasi)
+        }
+    })
 
     var jumlahKamar by rememberSaveable { mutableStateOf("") }
     var jumlahFasilitas by rememberSaveable { mutableStateOf("") }
@@ -137,9 +139,9 @@ fun BookingScreen(
 
             }
             is UiState.Success -> {
-                showToast(context, uiState.data.data.idReservasi.toString())
-                showToast(context, uiState.data.message)
-                navigateToResume(uiState.data.data.idReservasi)
+//                showToast(context, uiState.data.message)
+//                navigateToResume(uiState.data.data.idReservasi)
+                idResrvasi = uiState.data.data.idReservasi
             }
             is UiState.Error -> {}
         }
@@ -273,20 +275,15 @@ fun BookingScreen(
             FilledTonalButton(
                 onClick = {
 //                navigateToBooking(id)
-                    val listKamar: Array<KamarRequestItem> = arrayOf(
+                    val listKamar: List<KamarRequestItem> = listOf(
                         KamarRequestItem(
                             idJenisKamar = id,
                             hargaPerMalam = hargaBaru,
                             jumlah = jumlahKamar.toInt()
                         ),
-                        KamarRequestItem(
-                            idJenisKamar = id,
-                            hargaPerMalam = hargaBaru,
-                            jumlah = jumlahKamar.toInt()
-                        )
                     )
 
-                    val listFasilitas: Array<FasilitasRequestItem> = arrayOf(
+                    val listFasilitas: List<FasilitasRequestItem> = listOf(
                         FasilitasRequestItem(
                             idLayanan = idFasilitas.toInt(),
                             jumlah = jumlahFasilitas.toInt()
@@ -311,7 +308,7 @@ fun BookingScreen(
                     .padding(12.dp)
                     .fillMaxWidth(0.6f)
             ) {
-                Text(text = "Cek Resume")
+                Text(text = "Buat Reservasi")
             }
         }
     }

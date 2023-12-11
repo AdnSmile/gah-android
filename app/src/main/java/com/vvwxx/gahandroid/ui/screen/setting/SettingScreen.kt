@@ -53,7 +53,9 @@ fun SettingScreen(
     ),
     navigateToLogin: () -> Unit,
     navigateTolProfile: () -> Unit,
-    navigateToHome: () -> Unit
+    navigateToHome: () -> Unit,
+    navigateToCustomerBaru: () -> Unit,
+    navigateToPemesanTerbanyak: () -> Unit
 ) {
 
     val preferenceState by viewModel.getAccountPref.collectAsState(initial = null)
@@ -70,12 +72,17 @@ fun SettingScreen(
         mutableStateOf("")
     }
 
+    var role by rememberSaveable {
+        mutableStateOf("")
+    }
+
     LaunchedEffect(preferenceState) {
         val preference = preferenceState
         if (preference != null) {
             isLogin = preference.isLogin
             token = preference.token
             idLogin = preference.id
+            role = preference.role
         }
     }
 
@@ -83,11 +90,18 @@ fun SettingScreen(
     else {
         SettingContent(
             viewModel = viewModel,
+            role = role,
             navigateToHome = {
                 navigateToHome()
             },
             navigateTolProfile = {
                 navigateTolProfile()
+            },
+            navigateToCustomerBaru = {
+                navigateToCustomerBaru()
+            },
+            navigateToPemesanTerbanyak = {
+                navigateToPemesanTerbanyak()
             }
         )
     }
@@ -99,8 +113,11 @@ fun SettingScreen(
 fun SettingContent(
     modifier: Modifier = Modifier,
     viewModel: SettingViewModel,
+    role: String,
     navigateToHome: () -> Unit,
-    navigateTolProfile: () -> Unit
+    navigateTolProfile: () -> Unit,
+    navigateToCustomerBaru: () -> Unit,
+    navigateToPemesanTerbanyak: () -> Unit
 ) {
 
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -138,6 +155,22 @@ fun SettingContent(
 
         SettingContentItem(title = "Profile", icon = Icons.Filled.Person) {
             navigateTolProfile()
+        }
+
+        if (role == "owner" || role == "gm") {
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            SettingContentItem(title = "Laporan Customer Baru", icon = Icons.Filled.Person) {
+                navigateToCustomerBaru()
+            }
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            SettingContentItem(title = "Laporan Pemesan Terbanyak", icon = Icons.Filled.Person) {
+                navigateToPemesanTerbanyak()
+            }
+
         }
 
         Spacer(modifier = Modifier.padding(8.dp))

@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -33,6 +32,8 @@ import com.vvwxx.gahandroid.ui.screen.booking.BookingScreen
 import com.vvwxx.gahandroid.ui.screen.detail.DetailJenisScreen
 import com.vvwxx.gahandroid.ui.screen.history.HistoryScreen
 import com.vvwxx.gahandroid.ui.screen.home.HomeScreen
+import com.vvwxx.gahandroid.ui.screen.laporan.CustomerBaruScreen
+import com.vvwxx.gahandroid.ui.screen.laporan.PemesanTerbanyakScreen
 import com.vvwxx.gahandroid.ui.screen.login.LoginScreen
 import com.vvwxx.gahandroid.ui.screen.profile.ProfileScreen
 import com.vvwxx.gahandroid.ui.screen.register.RegisterScreen
@@ -41,7 +42,6 @@ import com.vvwxx.gahandroid.ui.screen.reservasi.ReservasiScreen
 import com.vvwxx.gahandroid.ui.screen.resume.ResumeScreen
 import com.vvwxx.gahandroid.ui.screen.setting.SettingScreen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HotelApp(
     modifier: Modifier = Modifier,
@@ -55,7 +55,9 @@ fun HotelApp(
         bottomBar = {
             if (currentRoute != Screen.DetailJenisKamar.route
                 && currentRoute != Screen.Login.route
-                && currentRoute != Screen.Register.route){
+                && currentRoute != Screen.Register.route
+                && currentRoute != Screen.CustomerBaru.route
+                && currentRoute != Screen.PemesanTerbanyak.route){
                 BottomBar(navController)
             }
         },
@@ -82,7 +84,8 @@ fun HotelApp(
             composable(Screen.Reservasi.route) {
 
                 ReservasiScreen(
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) { id ->
+                    modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+                    navigateToLogin = { navController.navigate(Screen.Login.route) }) { id ->
 
                     navController.navigate(Screen.DetailKetersediaanKamar.createRoute(id))
                 }
@@ -119,15 +122,32 @@ fun HotelApp(
                 )
             }
 
+            composable(Screen.CustomerBaru.route) {
+                // Customer Baru screen
+
+                CustomerBaruScreen(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+
+            composable(Screen.PemesanTerbanyak.route) {
+                // Pemesan Terbanyak screen
+
+                PemesanTerbanyakScreen(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+
             composable(Screen.Setting.route) {
                 // setting screen
 
                 SettingScreen(
                     navigateToLogin = { navController.navigate(Screen.Login.route) },
                     navigateToHome = { navController.navigate(Screen.Home.route)},
-                    navigateTolProfile = {
-                        navController.navigate(Screen.Profile.route)
-                    })
+                    navigateTolProfile = {navController.navigate(Screen.Profile.route)},
+                    navigateToCustomerBaru = {navController.navigate(Screen.CustomerBaru.route)},
+                    navigateToPemesanTerbanyak = {navController.navigate(Screen.PemesanTerbanyak.route)}
+                )
             }
 
             composable(Screen.Login.route) {
@@ -185,16 +205,6 @@ fun HotelApp(
                 )
             }
 
-//            composable(
-//                route = Screen.SettingProfile.route,
-//                arguments = listOf(navArgument("id") { type = NavType.IntType }),
-//            ) {
-//                val id = it.arguments?.getInt("id") ?: 0
-//                ProfileScreen(
-//                    id = id,
-//                    navigateBack = { navController.navigateUp() },
-//                )
-//            }
         }
 
     }

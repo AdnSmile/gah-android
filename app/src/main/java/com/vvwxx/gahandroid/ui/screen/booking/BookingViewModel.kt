@@ -28,6 +28,8 @@ class BookingViewModel(
     val addReservasiResponse: StateFlow<UiState<WebResponse<AddReservasiResponse>>> =
         repository.addReservasiResponse
 
+    val addReservasiSuccess = repository.addReservasiSuccess
+
     fun getJenisKamar() {
         viewModelScope.launch {
             repository.getJenisKamar()
@@ -36,7 +38,7 @@ class BookingViewModel(
 
     fun addReservasi(
         token: String, id: Int, checkin: String, checkout: String, dewasa: Int, anak: Int,
-        permintaan: String, kamar: Array<KamarRequestItem>, fasilitas: Array<FasilitasRequestItem>
+        permintaan: String, kamar: List<KamarRequestItem>, fasilitas: List<FasilitasRequestItem>
     ) {
         viewModelScope.launch {
             repository.addReservasi(
